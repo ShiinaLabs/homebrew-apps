@@ -1,0 +1,24 @@
+name: Audit Casks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Register local Tap
+        run: brew tap --custom-remote ShiinaLabs/apps "$GITHUB_WORKSPACE"
+
+      - name: Audit WiFi Lens Cask
+        run: brew audit --cask --strict --online --tap ShiinaLabs/apps
+
+      - name: Check WiFi Lens Cask style
+        run: brew style --cask ShiinaLabs/apps/wifi-lens
