@@ -1,0 +1,73 @@
+name: Update Kipless Cask
+
+on:
+  schedule:
+    - cron: "43 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Published stable Kipless tag, for example v1.0.0"
+        required: false
+        type: string
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-kipless-cask
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: macos-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG_INPUT: ${{ inputs.tag }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Register local Tap
+        run: brew tap --custom-remote ShiinaLabs/apps "$GITHUB_WORKSPACE"
+
+      - name: Update Kipless Cask
+        run: |
+          set -euo pipefail
+          if [[ -n "$TAG_INPUT" ]]; then
+            scripts/update-kipless-cask.sh "$TAG_INPUT"
+          else
+            scripts/update-kipless-cask.sh
+          fi
+
+      - name: Detect changes
+        id: diff
+        run: |
+          if git diff --quiet -- Casks/kipless.rb; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open update pull request
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          VERSION="$(sed -n 's/^  version "\([^"]*\)"$/\1/p' Casks/kipless.rb)"
+          BRANCH="automation/update-kipless-$VERSION"
+
+          if gh pr list --head "$BRANCH" --state open --json number --jq 'length' | grep -q '^1$'; then
+            echo "An update pull request for Kipless $VERSION is already open."
+            exit 0
+          fi
+
+          git config user.name "ShiinaLabs Homebrew Bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C "$BRANCH"
+          git add Casks/kipless.rb
+          git commit -m "chore: update Kipless Cask to $VERSION"
+          git push --force-with-lease --set-upstream origin "$BRANCH"
+          gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "chore: update Kipless Cask to $VERSION" \
+            --body "Updates the Kipless Cask to the published GitHub Release artifact for $VERSION."

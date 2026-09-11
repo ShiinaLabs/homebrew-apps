@@ -15,9 +15,23 @@ installed OSS app, while Homebrew can also manage explicit Cask upgrades.
 
 Each additional ShiinaLabs app gets one Cask file under Casks/.
 
+## Install Kipless
+
+~~~sh
+brew tap ShiinaLabs/apps
+brew install --cask ShiinaLabs/apps/kipless
+~~~
+
+Kipless is installed from the signed and notarized `Kipless.dmg` published by
+the ShiinaLabs/Kipless GitHub repository.
+
+The tap checks for new stable Kipless releases every six hours and opens a
+pull request with the updated version and SHA-256 when one is available.
+
 ## Update
 
 ~~~sh
 brew update
 brew upgrade --cask ShiinaLabs/apps/wifi-lens
+brew upgrade --cask ShiinaLabs/apps/kipless
 ~~~

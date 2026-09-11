@@ -17,8 +17,11 @@ jobs:
       - name: Register local Tap
         run: brew tap --custom-remote ShiinaLabs/apps "$GITHUB_WORKSPACE"
 
-      - name: Audit WiFi Lens Cask
+      - name: Audit Casks
         run: brew audit --cask --strict --online --tap ShiinaLabs/apps
 
       - name: Check WiFi Lens Cask style
         run: brew style --cask ShiinaLabs/apps/wifi-lens
+
+      - name: Check Kipless Cask style
+        run: brew style --cask ShiinaLabs/apps/kipless
