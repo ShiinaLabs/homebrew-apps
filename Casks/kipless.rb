@@ -1,6 +1,6 @@
 cask "kipless" do
-  version "1.0.0"
-  sha256 "9e23588b61c866c90b8a6ae86e417713d3139e5118f8c02ecd0bbe5c16ef4cf9"
+  version "1.1.0"
+  sha256 "f368e6e752783b4edc723d8fa5fab37eeba1a60a860a2bc15866c9482bcd18c6"
 
   url "https://github.com/ShiinaLabs/Kipless/releases/download/v#{version}/Kipless.dmg"
   name "Kipless"
