@@ -62,6 +62,9 @@ jobs:
 
           git config user.name "ShiinaLabs Homebrew Bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null; then
+            git fetch origin "refs/heads/$BRANCH:refs/remotes/origin/$BRANCH"
+          fi
           git switch -C "$BRANCH"
           git add Casks/kipless.rb
           git commit -m "chore: update Kipless Cask to $VERSION"
