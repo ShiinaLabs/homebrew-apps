@@ -1,6 +1,6 @@
 cask "wifi-lens" do
-  version "2.0.0"
-  sha256 "bb92e2ee5173dcf8b90fab0d2054aebd66ae5db1375502d639d9683428833d95"
+  version "2.0.1"
+  sha256 "c3b2fc8bf53f97cbf87b096da00a85ffdc5eb650f06f674dcb457d5003569399"
 
   url "https://github.com/SHIINASAMA/wifi-lens/releases/download/v#{version}/WiFiLens.dmg"
   name "WiFi Lens"
